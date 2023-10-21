@@ -4,9 +4,7 @@ class SimulateK:
 
     def  __init__(self, c, r, a):
       self.c = c
-      self.r = r
-      # self.qa = 0
-      # self.qb = 0
+      self.r = r  # r = lambda
       self.a = a
       self.profits = {}
 
@@ -22,12 +20,16 @@ class SimulateK:
             qb = self.a*pb
             la = beta / qa
             lb = betb / qb
-            qa = SimulateK.update(la)
-            qb = SimulateK.update(lb)
+            qa_adj = SimulateK.update(pa, la, k)
+            qb_adj = SimulateK.update(pb, lb, k) 
+            
+            la_new = 0 
+            lb_new = 0
+            
             if np.random.randn > pa:
-              profit = beta - lb
+              profit = beta - lb_new
             else:
-              profit = betb - la
+              profit = betb - la_new
             profit_acc.add(profit)
           
           self.profits.update({k : np.mean(profit_acc)})
@@ -37,9 +39,10 @@ class SimulateK:
 
              
 
-    @staticmethod
-    def update(l):
-        pass
+    def update(self, p, l, k):
+        q = ((2 + self.r * self.c) / (2 + k - self.r * l)) * p
+        return q
+        
 
 
     
